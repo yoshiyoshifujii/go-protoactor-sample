@@ -8,7 +8,8 @@
 
 ## Build, Test, and Development Commands
 - `make build` builds all packages and outputs `bin/go-protoactor-sample`.
-- `make run` runs the sample locally.
+- `make run` runs the Ping/Pong sample locally.
+- `make run-persistence` runs the persistence actor sample locally.
 - `make test` runs all tests across the module.
 - `make fmt` formats Go files with `gofmt`.
 - `make tidy` tidies module dependencies.
