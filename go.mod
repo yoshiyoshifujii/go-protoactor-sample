@@ -2,7 +2,10 @@ module yoshiyoshifujii/go-protoactor-sample
 
 go 1.25.6
 
-require github.com/asynkron/protoactor-go v0.0.0-20260118094027-288962e52f3f
+require (
+	github.com/asynkron/protoactor-go v0.0.0-20260118094027-288962e52f3f
+	google.golang.org/protobuf v1.36.10
+)
 
 require (
 	github.com/Workiva/go-datastructures v1.1.7 // indirect
@@ -32,5 +35,4 @@ require (
 	go.opentelemetry.io/otel/trace v1.38.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
 	golang.org/x/sys v0.38.0 // indirect
-	google.golang.org/protobuf v1.36.10 // indirect
 )
