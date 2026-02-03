@@ -25,12 +25,6 @@ func NewCounterActor() *CounterActor {
 	return &CounterActor{}
 }
 
-func NewCounterProducer() func() actor.Actor {
-	return func() actor.Actor {
-		return NewCounterActor()
-	}
-}
-
 func (a *CounterActor) Receive(ctx actor.Context) {
 	switch msg := ctx.Message().(type) {
 	case *persistence.RequestSnapshot:
@@ -61,6 +55,12 @@ func (a *CounterActor) applyPersisted(msg *anypb.Any) {
 		a.count = value
 	case counterEventIncremented:
 		a.count += value
+	}
+}
+
+func NewCounterProducer() func() actor.Actor {
+	return func() actor.Actor {
+		return NewCounterActor()
 	}
 }
 
