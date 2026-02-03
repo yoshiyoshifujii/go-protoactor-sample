@@ -18,17 +18,19 @@ const (
 
 type CounterActor struct {
 	persistence.Mixin
-	count int64
+	counter domain.Counter
 }
 
 func NewCounterActor() *CounterActor {
-	return &CounterActor{}
+	return &CounterActor{
+		counter: domain.NewCounter(),
+	}
 }
 
 func (a *CounterActor) Receive(ctx actor.Context) {
 	switch msg := ctx.Message().(type) {
 	case *persistence.RequestSnapshot:
-		a.PersistSnapshot(newCounterSnapshot(a.count))
+		a.PersistSnapshot(newCounterSnapshot(a.counter.Value()))
 	case *anypb.Any:
 		a.applyPersisted(msg)
 	case domain.CounterAdd:
@@ -36,12 +38,12 @@ func (a *CounterActor) Receive(ctx actor.Context) {
 		if !a.Recovering() {
 			a.PersistReceive(newCounterEvent(msg.Delta))
 		}
-		a.count += msg.Delta
+		current := a.counter.Add(msg.Delta)
 		if sender != nil {
-			ctx.Send(sender, domain.CounterValue{Value: a.count})
+			ctx.Send(sender, domain.CounterValue{Value: current})
 		}
 	case domain.CounterGet:
-		ctx.Respond(domain.CounterValue{Value: a.count})
+		ctx.Respond(domain.CounterValue{Value: a.counter.Value()})
 	}
 }
 
@@ -52,9 +54,9 @@ func (a *CounterActor) applyPersisted(msg *anypb.Any) {
 	}
 	switch msg.TypeUrl {
 	case counterSnapshotState:
-		a.count = value
+		a.counter.ApplySnapshot(value)
 	case counterEventIncremented:
-		a.count += value
+		a.counter.ApplyIncrement(value)
 	}
 }
 

@@ -118,8 +118,8 @@ func TestCounterActor_ApplyPersisted(t *testing.T) {
 			}
 
 			// Then
-			if actor.count != tt.expectedCount {
-				t.Fatalf("expected %d, got %d", tt.expectedCount, actor.count)
+			if actor.counter.Value() != tt.expectedCount {
+				t.Fatalf("expected %d, got %d", tt.expectedCount, actor.counter.Value())
 			}
 		})
 	}
@@ -150,8 +150,8 @@ func TestCounterActor_ApplyPersisted_InvalidData(t *testing.T) {
 			actor.applyPersisted(tt.message)
 
 			// Then
-			if actor.count != tt.expected {
-				t.Fatalf("expected count to remain %d, got %d", tt.expected, actor.count)
+			if actor.counter.Value() != tt.expected {
+				t.Fatalf("expected count to remain %d, got %d", tt.expected, actor.counter.Value())
 			}
 		})
 	}
